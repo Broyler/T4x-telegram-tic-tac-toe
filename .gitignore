@@ -6,6 +6,9 @@ __pycache__/
 # C extensions
 *.so
 
+# Database
+database.db
+
 # Editors
 .idea/
 

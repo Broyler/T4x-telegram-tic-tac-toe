@@ -1,8 +1,12 @@
-from datetime import datetime
+from datetime import datetime, UTC
 
 from peewee import *
 
-db = SqliteDatabase('users.db')
+db = SqliteDatabase('database.db')
+
+
+def utcnow():
+    return datetime.now(UTC)
 
 
 class BaseModel(Model):
@@ -14,11 +18,19 @@ class User(BaseModel):
     id = IntegerField(primary_key=True)
     wins = IntegerField(default=0)
     losses = IntegerField(default=0)
-    registered_date = DateTimeField(default=datetime.now)
+    registered_date = DateTimeField(default=utcnow)
+
+
+class Invitation(BaseModel):
+    id = IntegerField(primary_key=True)
+    invitor = ForeignKeyField(User)
+    acceptor = ForeignKeyField(User)
+    accepted_date = DateTimeField(default=utcnow)
 
 
 class Admin(BaseModel):
-    id = ForeignKeyField(User)
+    id = IntegerField(primary_key=True)
+    user_id = ForeignKeyField(User)
 
 
 class Game(BaseModel):
@@ -26,7 +38,7 @@ class Game(BaseModel):
     inviter = ForeignKeyField(User, null=False)
     acceptor = ForeignKeyField(User, null=False)
     is_accepted = BooleanField(default=False)
-    created_date = DateTimeField(default=datetime.now)
+    created_date = DateTimeField(default=utcnow)
 
 
 class Board(BaseModel):
@@ -34,3 +46,7 @@ class Board(BaseModel):
     game_id = ForeignKeyField(Game)
     inviters_move = BooleanField(default=True)
     board = FixedCharField(max_length=9, default="000000000")
+
+
+db.connect()
+db.create_tables([User, Game, Board])
