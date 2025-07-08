@@ -26,7 +26,7 @@ def create_game(user_id: int) -> Game:
     return Game.create(inviter=user_id)
 
 
-@router.message(CommandStart)
+@router.message(Command("start"))
 async def start(message: types.Message, state: FSMContext):
     user, just_created = users.get_user(message.from_user)
 
@@ -67,6 +67,9 @@ async def start(message: types.Message, state: FSMContext):
 async def invite(message: types.Message, state: FSMContext):
     users.get_user(message.from_user)
     handle = users.find_handle(message.text)
+
+    if handle == '@' + message.from_user.username:
+        return await message.answer(messages.self_invite)
 
     game = create_game(message.from_user.id)
 
