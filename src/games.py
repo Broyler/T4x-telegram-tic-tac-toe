@@ -8,6 +8,7 @@ from src.fsm import PlayingState
 from static import messages
 
 router = Router()
+OPEN_INV_LIMIT = 15
 
 
 def get_game(game_id: int) -> Game | None:
@@ -71,7 +72,11 @@ async def invite(message: types.Message, state: FSMContext):
     if handle == '@' + message.from_user.username:
         return await message.answer(messages.self_invite)
 
-    game = create_game(message.from_user.id)
+    uid = message.from_user.id
+    if Game.select().where(Game.is_accepted == False and Game.inviter == uid).count() >= OPEN_INV_LIMIT:
+        return await message.answer(messages.open_inv_limit)
+
+    game = create_game(uid)
 
     if not handle:  # invalid handle
         await message.answer(messages.basic_invite.format(game.id))
