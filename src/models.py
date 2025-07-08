@@ -18,12 +18,13 @@ class User(BaseModel):
     id = IntegerField(primary_key=True)
     wins = IntegerField(default=0)
     losses = IntegerField(default=0)
+    ties = IntegerField(default=0)
     registered_date = DateTimeField(default=utcnow)
 
 
 class Invitation(BaseModel):
     id = IntegerField(primary_key=True)
-    invitor = ForeignKeyField(User)
+    inviter = ForeignKeyField(User)
     acceptor = ForeignKeyField(User)
     accepted_date = DateTimeField(default=utcnow)
 
@@ -49,4 +50,4 @@ class Board(BaseModel):
 
 
 db.connect()
-db.create_tables([User, Game, Board])
+db.create_tables([User, Game, Board, Admin, Invitation])
