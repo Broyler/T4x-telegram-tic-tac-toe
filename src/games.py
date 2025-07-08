@@ -62,8 +62,6 @@ async def start(message: types.Message, state: FSMContext):
     await message.answer(messages.welcome.format(message.from_user.first_name))
 
 
-
-
 @router.message(Command("inv"))
 async def invite(message: types.Message, state: FSMContext):
     users.get_user(message.from_user)

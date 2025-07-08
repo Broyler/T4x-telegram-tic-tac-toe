@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 import asyncio
 from aiogram.enums import ParseMode
 
-from src import games
+from src import games, referrals
 from aiogram.filters.command import Command
 
 load_dotenv()
@@ -22,6 +22,7 @@ async def ping(message: types.Message):
 
 async def main():
     dp.include_router(games.router)
+    dp.include_router(referrals.router)
     await dp.start_polling(bot)
 
 
