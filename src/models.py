@@ -19,13 +19,14 @@ class User(BaseModel):
     wins = IntegerField(default=0)
     losses = IntegerField(default=0)
     ties = IntegerField(default=0)
+    username = CharField(index=True, max_length=60)
     registered_date = DateTimeField(default=utcnow)
 
 
 class Invitation(BaseModel):
     id = IntegerField(primary_key=True)
-    inviter = ForeignKeyField(User)
-    acceptor = ForeignKeyField(User)
+    inviter = ForeignKeyField(User, null=False)
+    acceptor = ForeignKeyField(User, null=False)
     accepted_date = DateTimeField(default=utcnow)
 
 
@@ -37,7 +38,7 @@ class Admin(BaseModel):
 class Game(BaseModel):
     id = IntegerField(primary_key=True)
     inviter = ForeignKeyField(User, null=False)
-    acceptor = ForeignKeyField(User, null=False)
+    acceptor = ForeignKeyField(User, null=True)
     is_accepted = BooleanField(default=False)
     created_date = DateTimeField(default=utcnow)
 
