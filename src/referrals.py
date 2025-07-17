@@ -20,7 +20,10 @@ def create_invitation(inviter_id: int, acceptor_id: int) -> Invitation:
 
 
 def invites_list(inviter_id: int) -> list[Game]:
-    games = Game.select().where(Game.inviter == inviter_id and Game.is_accepted == False).order_by(Game.id)
+    games = (Game.select()
+             .where((Game.inviter == inviter_id)
+                    & (Game.is_accepted == False))
+             .order_by(Game.id))
     return list(games)
 
 
@@ -76,7 +79,6 @@ async def select_invite(message: types.message, state: FSMContext):
         return await message.answer(messages.invalid_inv_selected.format(len(invites)))
 
     invite = invites[selected - 1]
-    #Game.select().where(Game.id == invite.id).delete()
     invite.delete_instance()
     invites = invites_list(user.id)
 

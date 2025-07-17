@@ -71,7 +71,9 @@ async def invite(message: types.Message, state: FSMContext):
         return await message.answer(messages.self_invite)
 
     uid = message.from_user.id
-    if Game.select().where(Game.is_accepted == False and Game.inviter == uid).count() >= OPEN_INV_LIMIT:
+    if (Game.select()
+            .where((Game.is_accepted == False)
+                   & (Game.inviter == uid)).count() >= OPEN_INV_LIMIT):
         return await message.answer(messages.open_inv_limit)
 
     game = create_game(uid)
