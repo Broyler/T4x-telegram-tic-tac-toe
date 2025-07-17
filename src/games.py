@@ -4,7 +4,7 @@ from aiogram.fsm.context import FSMContext
 
 from src import users, referrals
 from src.models import Game
-from src.fsm import PlayingState
+from src.fsm import TState
 from static import messages
 
 router = Router()
@@ -52,7 +52,7 @@ async def start(message: types.Message, state: FSMContext):
         if user_state is not None:
             return await message.answer(messages.game_accepted)
 
-        await state.set_state(PlayingState.selecting_move)
+        await state.set_state(TState.selecting_move)
         await message.answer(messages.welcome_ref.format(message.from_user.first_name))
 
         # Todo: send game board, etc
@@ -94,6 +94,6 @@ async def invite(message: types.Message, state: FSMContext):
     if user_state is not None:
         return await message.answer(messages.game_created)
 
-    await state.set_state(PlayingState.selecting_move)
+    await state.set_state(TState.selecting_move)
     await message.answer(messages.game_created_started)
     # Todo: send board etc
